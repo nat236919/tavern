@@ -1,2 +1,2 @@
-# whisperer
-Whisperer | Online Text Vault
+# tavern
+Tavern | Texts for Fellow Travellers
