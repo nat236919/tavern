@@ -1,0 +1,47 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "==0.83.0"
+anyio = "==3.6.1"
+atomicwrites = "==1.4.1"
+attrs = "==22.1.0"
+autopep8 = "==1.7.0"
+colorama = "==0.4.5"
+contextlib2 = "==21.6.0"
+contextvars = "==2.4"
+dataclasses = "==0.8"
+idna = "==3.4"
+immutables = "==0.19"
+importlib-metadata = "==4.8.3"
+iniconfig = "==1.1.1"
+pluggy = "==1.0.0"
+py = "==1.11.0"
+pycodestyle = "==2.9.1"
+pydantic = "==1.9.2"
+pyparsing = "==3.0.9"
+pytest = "==7.0.1"
+sniffio = "==1.2.0"
+starlette = "==0.19.1"
+toml = "==0.10.2"
+tomli = "==1.2.3"
+typing-extensions = "==4.1.1"
+zipp = "==3.6.0"
+uvicorn = "==0.16.0"
+asgiref = "==3.4.1"
+click = "==8.0.4"
+h11 = "==0.13.0"
+httptools = "==0.3.0"
+python-dotenv = "==0.20.0"
+pyyaml = "==6.0"
+watchgod = "==0.7"
+websockets = "==9.1"
+
+[dev-packages]
+autopep8 = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.6"
