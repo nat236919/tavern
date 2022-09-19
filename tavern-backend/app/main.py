@@ -1,15 +1,32 @@
-from typing import Union
-
+"""
+PROJECT: Tavern API
+DESCRIPTION: This is the main file for the Tavern API.
+AUTHOR: Nuttaphat Arunoprayoch
+"""
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+from config import SETTINGS
+from routers.api_scroll_router import api_scroll
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+# Create the app
+app = FastAPI(
+    title=SETTINGS.APP_TITLE,
+    description=SETTINGS.APP_DESCRIPTION,
+    version=SETTINGS.APP_VERSION,
+)
+
+
+# Setup CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# Register Routers
+app.include_router(api_scroll, prefix='/scrolls', tags=['scroll_api'])
