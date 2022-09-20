@@ -26,7 +26,7 @@ async def get_scrolls() -> List[Scroll]:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail='Forbidden')
 
-        # TODO: add service
+        # Get all scrolls
         scroll_list = core_service.get_scrolls()
 
     except HTTPException as e:
@@ -37,3 +37,23 @@ async def get_scrolls() -> List[Scroll]:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     return scroll_list
+
+
+@api_scroll.get('/{id}/')
+async def get_scroll(id: str) -> Scroll:
+    try:
+        if not id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail='id was not provided')
+
+        # Get a scroll by id
+        scroll = core_service.get_scroll_by_id(id)
+
+    except HTTPException as e:
+        raise e
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+    return scroll
