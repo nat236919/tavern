@@ -1,15 +1,16 @@
-import time
 from typing import List
 from fastapi import APIRouter, HTTPException, status
 
 from config import SETTINGS
 from models.scroll_model import Scroll
+from services.core_service import CoreService
 
 
 api_scroll = APIRouter()
+core_service = CoreService()
 
 
-@api_scroll.get('/', response_model=List[Scroll], status_code=status.HTTP_200_OK)
+@api_scroll.get('/', status_code=status.HTTP_200_OK)
 async def get_scrolls() -> List[Scroll]:
     """Get a list of all scrolls.
     Args:
@@ -26,6 +27,7 @@ async def get_scrolls() -> List[Scroll]:
                 status_code=status.HTTP_403_FORBIDDEN, detail='Forbidden')
 
         # TODO: add service
+        scroll_list = core_service.get_scrolls()
 
     except HTTPException as e:
         raise e
