@@ -1,8 +1,7 @@
 import time
 from typing import Dict, List
 
-from config import SETTINGS
-from models.scroll_model import Scroll
+from app.models.scroll_model import Scroll
 
 
 class CoreService:

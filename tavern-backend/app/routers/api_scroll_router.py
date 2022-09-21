@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status
 
-from config import SETTINGS
-from models.scroll_model import Scroll
-from services.core_service import CoreService
+from app.config import SETTINGS
+from app.models.scroll_model import Scroll
+from app.services.core_service import CoreService
 
 
 api_scroll = APIRouter()

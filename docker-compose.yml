@@ -1,0 +1,13 @@
+version: '3'
+services:
+  tavern-backend:
+    container_name: 'tavern-backend'
+    image: tavern-backend:latest
+    build: ./tavern-backend
+    env_file:
+      - ./tavern-backend/app/.env
+    ports:
+      - 8000:8000
+    volumes:
+      - ./tavern-backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000

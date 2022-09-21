@@ -6,8 +6,8 @@ AUTHOR: Nuttaphat Arunoprayoch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import SETTINGS
-from routers.api_scroll_router import api_scroll
+from .config import SETTINGS
+from .routers.api_scroll_router import api_scroll
 
 
 # Create the app
