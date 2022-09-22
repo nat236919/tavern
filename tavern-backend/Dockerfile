@@ -1,13 +1,17 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.6
 
-RUN mkdir app
+# Setup Working Directory
 WORKDIR /app
 
-ENV PATH="${PATH}:/root/.local/bin"
-ENV PYTHONPATH=.
+# Install dependencies
+COPY Pipfile Pipfile.lock requirements.txt .
+RUN pip install pipenv && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends gcc python3-dev libssl-dev && \
+    pipenv install --deploy --system && \
+    apt-get remove -y gcc python3-dev libssl-dev && \
+    apt-get autoremove -y && \
+    pip uninstall pipenv -y
 
-COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
+# Copy all files to the current working directory
 COPY app/ .
