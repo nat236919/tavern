@@ -38,6 +38,7 @@ python-dotenv = "==0.20.0"
 pyyaml = "==6.0"
 watchgod = "==0.7"
 websockets = "==9.1"
+pymongo = "==4.1.1"
 
 [dev-packages]
 autopep8 = "*"
