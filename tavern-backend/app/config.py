@@ -18,5 +18,14 @@ class Config(BaseSettings):
     APP_DEBUG: bool = os.getenv('APP_DEBUG')
     APP_SECRET_KEY: str = os.getenv('APP_SECRET_KEY')
 
+    # Mongo
+    MONGO_ROOT_USER: str = os.getenv('MONGO_ROOT_USER')
+    MONGO_ROOT_PASSWORD: str = os.getenv('MONGO_ROOT_PASSWORD')
+    MONGO_DATABASE: str = os.getenv('MONGO_DATABASE')
+
+    # Mongo Express
+    MONGOEXPRESS_LOGIN: str = os.getenv('MONGOEXPRESS_LOGIN')
+    MONGOEXPRESS_PASSWORD: str = os.getenv('MONGOEXPRESS_PASSWORD')
+
 
 SETTINGS = Config()
