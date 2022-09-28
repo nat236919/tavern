@@ -2,12 +2,15 @@ version: '3'
 services:
   mongo:
     image: mongo
+    restart: always
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
     ports:
       - 27017:27017
+    volumes:
+      - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
 
   mongo-express:
     image: mongo-express
