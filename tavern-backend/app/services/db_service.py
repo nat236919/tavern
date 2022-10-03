@@ -12,16 +12,24 @@ class MongoService:
     """MongoDB Service
     """
 
-    def __init__(self) -> None:
+    def __init__(self, db_name, coll_name) -> None:
+        """Mongo DB service
+
+        Args:
+            db (str): DB name
+            coll (str): Collection Name
+        """
+        self.db_name = db_name
+        self.coll_name = coll_name
         self.root_username = urllib.parse.quote_plus(SETTINGS.MONGO_ROOT_USER)
         self.root_password = urllib.parse.quote_plus(
             SETTINGS.MONGO_ROOT_PASSWORD)
-        self.database = SETTINGS.MONGO_DATABASE
 
         self.mongo_client = MongoClient(
             f'mongodb://{self.root_username}:{self.root_password}@mongo:27017'
         )
-        self.db = self.mongo_client[self.database]
+        self.db = self.mongo_client[self.db_name]
+        self.coll = self.db[self.coll_name]
 
     def get_collection_names(self) -> List[str]:
         """Get all collection names in DB
@@ -31,11 +39,10 @@ class MongoService:
         """
         return self.db.list_collection_names()
 
-    def execute(self, s):
-        pass
-
     def get(self):
-        pass
+        """Get docs from collection
 
-    def post(self):
-        pass
+        Returns:
+            List[Scroll]: A list of Scroll documents
+        """
+        return [Scroll(**data) for data in self.coll.find()]

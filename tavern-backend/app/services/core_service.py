@@ -1,7 +1,9 @@
 import time
 from typing import Dict, List
 
+from app.config import SETTINGS
 from app.models.scroll_model import Scroll
+from app.services.db_service import MongoService
 
 
 class CoreService:
@@ -9,24 +11,10 @@ class CoreService:
     """
 
     def __init__(self) -> None:
-        self.dummy_data_list = [
-            Scroll(
-                content='Dummy data',
-                author='Admin',
-                expired_at=self.get_cur_ts(),
-            ),
-            Scroll(
-                content='Dummy data 2',
-                author='Admin 2',
-                expired_at=self.get_cur_ts(),
-            ),
-            Scroll(
-                id='e5f70ca4-3d0f-40a9-9de7-328ffd85f03d',
-                content='Dummy data 3',
-                author='Admin 3',
-                expired_at=self.get_cur_ts(),
-            )
-        ]
+        self.scroll_service = MongoService(
+            db_name=SETTINGS.MONGO_DATABASE,
+            coll_name=SETTINGS.MONGO_COLLECTION,
+        )
 
     @staticmethod
     def get_cur_ts() -> int:
@@ -43,7 +31,7 @@ class CoreService:
         Returns:
             List[Scroll]: A list of scrolls
         """
-        return self.dummy_data_list
+        return self.scroll_service.get()
 
     def get_scroll_by_id(self, id) -> Scroll or Dict[None, None]:
         """Get scroll data by its id
