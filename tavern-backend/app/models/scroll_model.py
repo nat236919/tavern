@@ -1,4 +1,5 @@
-from uuid import uuid4
+import random
+import string
 from time import time
 from typing import Optional
 
@@ -9,11 +10,20 @@ from pydantic import BaseModel, Field
 # Scroll Model
 # - Scroll
 ################################################################################
+def generate_hex_string():
+    """Generate Unique ID with 24 length
+
+    Returns:
+        str: ID
+    """
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=24))
+
+
 class Scroll(BaseModel):
     """Model for Scroll data
 
     Attrs:
-        id (str): Unique id. Defaults to uuid.uuid4().
+        _id (str): Unique id. Defaults to ).
         created_at (float): Date created of the scroll. Defaults to time.time()
         content (str): Content
         author (str): A name of the scroll creator
@@ -22,7 +32,7 @@ class Scroll(BaseModel):
         burn_when_open (Optional[bool]): Destroy the content when already open. Defaults to False.
     """
     # Auto-generated
-    id: str = Field(default_factory=uuid4)
+    _id: str = Field(default_factory=generate_hex_string)
     created_at: float = Field(default_factory=time)
 
     # Required

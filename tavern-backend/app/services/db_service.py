@@ -1,6 +1,6 @@
-from typing import List
-
 import urllib.parse
+from typing import List
+from bson import ObjectId
 
 from app.config import SETTINGS
 from app.models.scroll_model import Scroll
@@ -46,3 +46,22 @@ class MongoService:
             List[Scroll]: A list of Scroll documents
         """
         return [Scroll(**data) for data in self.coll.find()]
+
+    def get_by_id(self, id):
+        """Get a doc from collection by its id
+
+        Args:
+            id (str): Document ID
+
+        Returns:
+            Scroll: Scroll document
+        """
+        if not id or len(id) != 24:
+            return None
+
+        # Query
+        data = self.coll.find_one({'_id': ObjectId(id)})
+        if not data:
+            return None
+
+        return Scroll(**data)
