@@ -33,20 +33,13 @@ class CoreService:
         """
         return self.scroll_service.get()
 
-    def get_scroll_by_id(self, id) -> Scroll or Dict[None, None]:
+    def get_scroll_by_id(self, id) -> Scroll:
         """Get scroll data by its id
 
         Args:
-            id (str): uuid4
+            id (str): HEX string
 
         Returns:
             Scroll: Scroll model
         """
-        filtered_scroll_data_list = list(
-            filter(lambda data: data.id == id, self.dummy_data_list)
-        )
-
-        if not filtered_scroll_data_list:
-            return {}
-
-        return filtered_scroll_data_list.pop()
+        return self.scroll_service.get_by_id(id)
