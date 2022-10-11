@@ -39,7 +39,7 @@ class MongoService:
         """
         return self.db.list_collection_names()
 
-    def get(self):
+    def get(self) -> List[Scroll]:
         """Get docs from collection
 
         Returns:
@@ -47,7 +47,7 @@ class MongoService:
         """
         return [Scroll(**data) for data in self.coll.find()]
 
-    def get_by_id(self, id):
+    def get_by_id(self, id) -> Scroll:
         """Get a doc from collection by its id
 
         Args:
@@ -56,7 +56,7 @@ class MongoService:
         Returns:
             Scroll: Scroll document
         """
-        if not id or len(id) != 24:
+        if not id:
             return None
 
         # Query
@@ -65,3 +65,22 @@ class MongoService:
             return None
 
         return Scroll(**data)
+
+    def insert_one(self, scroll_model: Scroll) -> Scroll:
+        """Insert a document from model
+
+        Args:
+            scroll_model (Scroll): Scroll
+
+        Raises:
+            ValueError: If scroll_model is not Scroll type
+
+        Returns:
+            Scroll: Scroll document
+        """
+        if not isinstance(scroll_model, Scroll):
+            raise ValueError('scroll_model must be Scroll')
+
+        inserted_data = self.coll.insert_one(document=scroll_model.dict())
+
+        return self.get_by_id(id=inserted_data.inserted_id)

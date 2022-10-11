@@ -29,7 +29,7 @@ class Scroll(BaseModel):
         author (str): A name of the scroll creator
         expired_at (float): Expiration date for the scroll
         secret_key (Optional[str]): Secret to unlock content if applicable. Defaults to ''.
-        burn_when_open (Optional[bool]): Destroy the content when already open. Defaults to False.
+        read_once (Optional[bool]): Only allow be read once. Defaults to False.
     """
     # Auto-generated
     _id: str = Field(default_factory=generate_hex_string)
@@ -42,4 +42,4 @@ class Scroll(BaseModel):
 
     # Optional
     secret_key: Optional[str] = ''
-    burn_when_open: Optional[bool] = False
+    read_once: Optional[bool] = False

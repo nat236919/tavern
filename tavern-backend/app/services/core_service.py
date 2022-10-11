@@ -43,3 +43,14 @@ class CoreService:
             Scroll: Scroll model
         """
         return self.scroll_service.get_by_id(id)
+
+    def create_scroll(self, scroll_model) -> Scroll:
+        """Create a scroll data
+
+        Args:
+            scroll_model (Scroll): Scroll document
+
+        Returns:
+            Scroll: Scroll document
+        """
+        return self.scroll_service.insert_one(scroll_model)
