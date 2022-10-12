@@ -33,7 +33,7 @@ class CoreService:
         """
         return self.scroll_service.get()
 
-    def get_scroll_by_id(self, id) -> Scroll:
+    def get_scroll_by_id(self, id: str) -> Scroll:
         """Get scroll data by its id
 
         Args:
@@ -44,7 +44,7 @@ class CoreService:
         """
         return self.scroll_service.get_by_id(id)
 
-    def create_scroll(self, scroll_model) -> Scroll:
+    def create_scroll(self, scroll_model: Scroll) -> Scroll:
         """Create a scroll data
 
         Args:
@@ -54,3 +54,15 @@ class CoreService:
             Scroll: Scroll document
         """
         return self.scroll_service.insert_one(scroll_model)
+
+    def update_scroll(self, id: str, scroll_model: Scroll) -> Scroll:
+        """Update a scroll data
+
+        Args:
+            id (str): HEX string
+            scroll_model (Scroll): Scroll document
+
+        Returns:
+            int: A number of documents affected
+        """
+        return self.scroll_service.update_one(id, scroll_model)

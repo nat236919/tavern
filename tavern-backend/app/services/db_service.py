@@ -47,7 +47,7 @@ class MongoService:
         """
         return [Scroll(**data) for data in self.coll.find()]
 
-    def get_by_id(self, id) -> Scroll:
+    def get_by_id(self, id: str) -> Scroll:
         """Get a doc from collection by its id
 
         Args:
@@ -84,3 +84,30 @@ class MongoService:
         inserted_data = self.coll.insert_one(document=scroll_model.dict())
 
         return self.get_by_id(id=inserted_data.inserted_id)
+
+    def update_one(self, id: str, scroll_model: Scroll):
+        """Update a document from model
+
+        Args:
+            id (str): Document ID
+            scroll_model (Scroll): Scroll
+
+        Raises:
+            ValueError: If scroll_model is not Scroll type
+
+        Returns:
+            int: A number of documents affected
+        """
+        if not isinstance(scroll_model, Scroll):
+            raise ValueError('scroll_model must be Scroll')
+
+        # Filter out _id key
+        no_id_scroll_data = {k: v for k,
+                             v in scroll_model.dict().items() if k != '_id'}
+
+        result = self.coll.update_one(
+            filter={'_id': ObjectId(id)},
+            update={'$set': no_id_scroll_data},
+        )
+
+        return result.modified_count

@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Path, Query
 
 from app.config import SETTINGS
 from app.models.scroll_model import Scroll
@@ -39,15 +39,52 @@ async def get_scrolls() -> List[Scroll]:
     return scroll_list
 
 
-@api_scroll.get('/{id}/')
-async def get_scroll(id: str) -> Scroll:
+@api_scroll.get('/{id}')
+async def get_scroll(id: str = Path(title='Scroll document ID'), key: str = Query(default='')) -> Scroll:
     try:
         if not id:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail='id was not provided')
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='id was not provided'
+            )
 
         # Get a scroll by id
         scroll = core_service.get_scroll_by_id(id)
+        if not scroll:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Scroll not found'
+            )
+
+        # Check expired_date
+        if core_service.get_cur_ts() >= scroll.expired_at:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='The Scroll has already expired.'
+            )
+
+        # Check secret_key
+        if scroll.secret_key and scroll.secret_key != key:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='Incorrect secret key.'
+            )
+
+        # Check read_once
+        if scroll.read_once and scroll.has_been_read:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='The Scroll has already been read.'
+            )
+
+        # Update Scroll
+        if not scroll.has_been_read:
+            scroll.has_been_read = True
+            affected_doc_count = core_service.update_scroll(
+                id=id, scroll_model=scroll
+            )
+            if not affected_doc_count:
+                raise Exception('No document updated')
 
     except HTTPException as e:
         raise e
