@@ -1,9 +1,7 @@
 let dbName = "tavern"
+let collName = "scrolls"
 let user = "root"
 let pwd = "root"
-
-let collName = "scrolls"
-
 
 conn = new Mongo();
 db = conn.getDB(dbName)
@@ -21,4 +19,4 @@ db.createUser(
     }
 );
 
-db.createCollection(collName , { capped: false });
+db.createCollection(collName, { capped: false });
