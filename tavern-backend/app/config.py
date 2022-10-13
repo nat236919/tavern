@@ -23,6 +23,7 @@ class Config(BaseSettings):
     MONGO_ROOT_PASSWORD: str = os.getenv('MONGO_ROOT_PASSWORD')
     MONGO_DATABASE: str = os.getenv('MONGO_DATABASE')
     MONGO_COLLECTION: str = os.getenv('MONGO_COLLECTION')
+    MONGO_TICKET_COLLECTION: str = os.getenv('MONGO_TICKET_COLLECTION')
 
     # Mongo Express
     MONGOEXPRESS_LOGIN: str = os.getenv('MONGOEXPRESS_LOGIN')

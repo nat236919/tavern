@@ -1,5 +1,6 @@
 let dbName = "tavern"
 let collName = "scrolls"
+let collNameTicket = "tickets"
 let user = "root"
 let pwd = "root"
 
@@ -20,3 +21,4 @@ db.createUser(
 );
 
 db.createCollection(collName, { capped: false });
+db.createCollection(collNameTicket, { capped: false });

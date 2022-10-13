@@ -3,8 +3,8 @@ from typing import List
 from bson import ObjectId
 
 from app.config import SETTINGS
-from app.models.scroll_model import Scroll
 
+from pydantic import BaseModel
 from pymongo.mongo_client import MongoClient
 
 
@@ -12,15 +12,17 @@ class MongoService:
     """MongoDB Service
     """
 
-    def __init__(self, db_name, coll_name) -> None:
+    def __init__(self, db_name, coll_name, model_template) -> None:
         """Mongo DB service
 
         Args:
             db (str): DB name
             coll (str): Collection Name
+            model_template (BaseModel): pydantic BaseModel
         """
         self.db_name = db_name
         self.coll_name = coll_name
+        self.model_template = model_template
         self.root_username = urllib.parse.quote_plus(SETTINGS.MONGO_ROOT_USER)
         self.root_password = urllib.parse.quote_plus(
             SETTINGS.MONGO_ROOT_PASSWORD)
@@ -39,22 +41,22 @@ class MongoService:
         """
         return self.db.list_collection_names()
 
-    def get(self) -> List[Scroll]:
+    def get(self) -> List[BaseModel]:
         """Get docs from collection
 
         Returns:
-            List[Scroll]: A list of Scroll documents
+            List[BaseModel]: A list of BaseModel documents
         """
-        return [Scroll(**data) for data in self.coll.find()]
+        return [self.model_template(**data) for data in self.coll.find()]
 
-    def get_by_id(self, id: str) -> Scroll:
+    def get_by_id(self, id: str) -> BaseModel:
         """Get a doc from collection by its id
 
         Args:
             id (str): Document ID
 
         Returns:
-            Scroll: Scroll document
+            BaseModel: BaseModel document
         """
         if not id:
             return None
@@ -64,50 +66,50 @@ class MongoService:
         if not data:
             return None
 
-        return Scroll(**data)
+        return self.model_template(**data)
 
-    def insert_one(self, scroll_model: Scroll) -> Scroll:
+    def insert_one(self, model_data: BaseModel) -> BaseModel:
         """Insert a document from model
 
         Args:
-            scroll_model (Scroll): Scroll
+            model_data (BaseModel): pydantic BaseModel
 
         Raises:
-            ValueError: If scroll_model is not Scroll type
+            ValueError: If model_data is not BaseModel type
 
         Returns:
-            Scroll: Scroll document
+            BaseModel: BaseModel document
         """
-        if not isinstance(scroll_model, Scroll):
-            raise ValueError('scroll_model must be Scroll')
+        if not isinstance(model_data, self.model_template):
+            raise ValueError('model_data must be BaseModel')
 
-        inserted_data = self.coll.insert_one(document=scroll_model.dict())
+        inserted_data = self.coll.insert_one(document=model_data.dict())
 
         return self.get_by_id(id=inserted_data.inserted_id)
 
-    def update_one(self, id: str, scroll_model: Scroll):
+    def update_one(self, id: str, model_data: BaseModel) -> int:
         """Update a document from model
 
         Args:
             id (str): Document ID
-            scroll_model (Scroll): Scroll
+            model_data (BaseModel): pydantic BaseModel
 
         Raises:
-            ValueError: If scroll_model is not Scroll type
+            ValueError: If model_data is not BaseModel type
 
         Returns:
             int: A number of documents affected
         """
-        if not isinstance(scroll_model, Scroll):
-            raise ValueError('scroll_model must be Scroll')
-
-        # Filter out _id key
-        no_id_scroll_data = {k: v for k,
-                             v in scroll_model.dict().items() if k != '_id'}
+        if not isinstance(model_data, self.model_template):
+            raise ValueError('model_data must be BaseModel')
 
         result = self.coll.update_one(
             filter={'_id': ObjectId(id)},
-            update={'$set': no_id_scroll_data},
+            update={
+                '$set': {
+                    k: v for k, v in model_data.dict().items() if k != '_id'
+                }
+            },
         )
 
         return result.modified_count

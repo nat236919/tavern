@@ -3,6 +3,7 @@ from typing import Dict, List
 
 from app.config import SETTINGS
 from app.models.scroll_model import Scroll
+from app.models.ticket_model import Ticket
 from app.services.db_service import MongoService
 
 
@@ -11,9 +12,15 @@ class CoreService:
     """
 
     def __init__(self) -> None:
+        self.ticket_service = MongoService(
+            db_name=SETTINGS.MONGO_DATABASE,
+            coll_name=SETTINGS.MONGO_TICKET_COLLECTION,
+            model_template=Ticket,
+        )
         self.scroll_service = MongoService(
             db_name=SETTINGS.MONGO_DATABASE,
             coll_name=SETTINGS.MONGO_COLLECTION,
+            model_template=Scroll,
         )
 
     @staticmethod
@@ -24,6 +31,14 @@ class CoreService:
             float: current timestamp (rounded)
         """
         return float(time.time())
+
+    def get_ticket(self) -> Ticket:
+        """Create and Insert Ticket
+
+        Returns:
+            Ticket: Ticket model
+        """
+        return self.ticket_service.insert_one(Ticket())
 
     def get_scrolls(self) -> List[Scroll]:
         """Get all scrolls

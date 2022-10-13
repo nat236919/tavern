@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import SETTINGS
 from .routers.api_scroll_router import api_scroll
+from .routers.api_ticket_router import api_ticket
 
 
 # Create the app
@@ -30,3 +31,4 @@ app.add_middleware(
 
 # Register Routers
 app.include_router(api_scroll, prefix='/scrolls', tags=['scroll_api'])
+app.include_router(api_ticket, prefix='/tickets', tags=['ticket_api'])
