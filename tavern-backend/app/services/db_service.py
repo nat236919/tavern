@@ -58,7 +58,7 @@ class MongoService:
         Returns:
             BaseModel: BaseModel document
         """
-        if not id:
+        if not id or not isinstance(id, str) or len(id) != 24:
             return None
 
         # Query
