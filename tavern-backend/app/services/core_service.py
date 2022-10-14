@@ -70,7 +70,7 @@ class CoreService:
         """
         return self.scroll_service.insert_one(scroll_model)
 
-    def update_scroll(self, id: str, scroll_model: Scroll) -> Scroll:
+    def update_scroll(self, id: str, scroll_model: Scroll) -> int:
         """Update a scroll data
 
         Args:
