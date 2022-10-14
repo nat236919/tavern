@@ -85,7 +85,7 @@ class MongoService:
 
         inserted_data = self.coll.insert_one(document=model_data.dict())
 
-        return self.get_by_id(id=inserted_data.inserted_id)
+        return self.get_by_id(id=str(inserted_data.inserted_id))
 
     def update_one(self, id: str, model_data: BaseModel) -> int:
         """Update a document from model
