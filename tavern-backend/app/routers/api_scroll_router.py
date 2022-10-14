@@ -97,8 +97,16 @@ async def get_scroll(id: str = Path(title='Scroll document ID'), key: str = Quer
 
 
 @api_scroll.post('/')
-async def post_scroll(scroll_model: Scroll) -> Scroll:
+async def post_scroll(scroll_model: Scroll, ticket: str = Query()) -> Scroll:
     try:
+        # Validate ticket number
+        is_ticket_valid = core_service.validate_ticket(ticket)
+        if not is_ticket_valid:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='The ticket has expired or is invalid.'
+            )
+
         if not scroll_model:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail='scroll_model was not provided'

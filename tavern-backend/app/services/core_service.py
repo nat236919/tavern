@@ -40,6 +40,33 @@ class CoreService:
         """
         return self.ticket_service.insert_one(Ticket())
 
+    def validate_ticket(self, ticket_number: str) -> bool:
+        """Validate ticket number
+
+        Args:
+            ticket_number (str): Ticket number
+
+        Returns:
+            bool: Ticket validation status
+        """
+        is_valid = False
+        ticket_model = self.ticket_service.get_by_key_value(
+            key='number',
+            value=ticket_number,
+        )
+
+        # If valid, punch the ticket
+        if ticket_model and not ticket_model.is_used:
+            is_valid = True
+            ticket_model.is_used = True
+            self.ticket_service.update_one_by_kay_value(
+                key='number',
+                value=ticket_model.number,
+                model_data=ticket_model,
+            )
+
+        return is_valid
+
     def get_scrolls(self) -> List[Scroll]:
         """Get all scrolls
 

@@ -1,5 +1,5 @@
 import urllib.parse
-from typing import List
+from typing import Any, List
 from bson import ObjectId
 
 from app.config import SETTINGS
@@ -55,14 +55,34 @@ class MongoService:
         Args:
             id (str): Document ID
 
+        Raises:
+            ValueError: id parameter is not a string whose length is 24
+
         Returns:
             BaseModel: BaseModel document
         """
-        if not id or not isinstance(id, str) or len(id) != 24:
-            return None
+        if isinstance(id, str) and len(id) != 24:
+            raise ValueError('id must be 24 in length.')
 
         # Query
         data = self.coll.find_one({'_id': ObjectId(id)})
+        if not data:
+            return None
+
+        return self.model_template(**data)
+
+    def get_by_key_value(self, key: str, value: Any) -> BaseModel:
+        """Get a doc from collection by its unique key
+
+        Args:
+            key (str): Document key
+            values (Any): Document value
+
+        Returns:
+            BaseModel: BaseModel document
+        """
+        # Query
+        data = self.coll.find_one({key: value})
         if not data:
             return None
 
@@ -95,6 +115,39 @@ class MongoService:
             model_data (BaseModel): pydantic BaseModel
 
         Raises:
+            ValueError: id parameter is not a string whose length is 24
+            ValueError: If model_data is not BaseModel type
+
+        Returns:
+            int: A number of documents affected
+        """
+        if isinstance(id, str) and len(id) != 24:
+            raise ValueError('id must be 24 in length.')
+
+        if not isinstance(model_data, self.model_template):
+            raise ValueError('model_data must be BaseModel')
+
+        result = self.coll.update_one(
+            filter={'_id': ObjectId(id)},
+            update={
+                '$set': {
+                    k: v for k, v in model_data.dict().items() if k != '_id'
+                }
+            },
+        )
+
+        return result.modified_count
+
+    def update_one_by_kay_value(self, key: str, value: Any, model_data: BaseModel) -> int:
+        """Update a document by its key and value
+
+        Args:
+            key (str): Document key
+            values (Any): Document value
+            model_data (BaseModel): pydantic BaseModel
+
+        Raises:
+            ValueError: id parameter is not a string whose length is 24
             ValueError: If model_data is not BaseModel type
 
         Returns:
@@ -104,7 +157,7 @@ class MongoService:
             raise ValueError('model_data must be BaseModel')
 
         result = self.coll.update_one(
-            filter={'_id': ObjectId(id)},
+            filter={key: value},
             update={
                 '$set': {
                     k: v for k, v in model_data.dict().items() if k != '_id'
