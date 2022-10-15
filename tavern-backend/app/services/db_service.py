@@ -122,7 +122,7 @@ class MongoService:
             int: A number of documents affected
         """
         if isinstance(id, str) and len(id) != 24:
-            raise ValueError('id must be 24 in length.')
+            raise ValueError('id is invalid')
 
         if not isinstance(model_data, self.model_template):
             raise ValueError('model_data must be BaseModel')

@@ -9,7 +9,12 @@ api_ticket = APIRouter()
 core_service = CoreService()
 
 
-@api_ticket.get('/single', response_model_include=('number', 'created_at'))
+@api_ticket.get(
+    '/single',
+    response_model=Ticket,
+    response_model_include=('number', 'created_at'),
+    status_code=status.HTTP_200_OK
+)
 async def get_ticket() -> Ticket:
     try:
         # Get a Ticket

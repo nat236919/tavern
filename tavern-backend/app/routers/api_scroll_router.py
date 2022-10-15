@@ -10,7 +10,12 @@ api_scroll = APIRouter()
 core_service = CoreService()
 
 
-@api_scroll.get('/', status_code=status.HTTP_200_OK)
+@api_scroll.get(
+    '/',
+    response_model=List[Scroll],
+    response_model_include=('content', 'author'),
+    status_code=status.HTTP_200_OK
+)
 async def get_scrolls() -> List[Scroll]:
     """Get a list of all scrolls.
     Args:
@@ -39,7 +44,12 @@ async def get_scrolls() -> List[Scroll]:
     return scroll_list
 
 
-@api_scroll.get('/{id}')
+@api_scroll.get(
+    '/{id}',
+    response_model=Scroll,
+    response_model_include=('content', 'author'),
+    status_code=status.HTTP_200_OK
+)
 async def get_scroll(id: str = Path(title='Scroll document ID'), key: str = Query(default='')) -> Scroll:
     try:
         if not id:
@@ -96,7 +106,12 @@ async def get_scroll(id: str = Path(title='Scroll document ID'), key: str = Quer
     return scroll
 
 
-@api_scroll.post('/')
+@api_scroll.post(
+    '/',
+    response_model=Scroll,
+    response_model_include=('content', 'author'),
+    status_code=status.HTTP_201_CREATED
+)
 async def post_scroll(scroll_model: Scroll, ticket: str = Query()) -> Scroll:
     try:
         # Validate ticket number
