@@ -23,7 +23,7 @@ class Scroll(BaseModel):
     """Model for Scroll data
 
     Attrs:
-        _id (str): Unique id. Defaults to ).
+        _id (str): Unique id. Defaults to generate_hex_string().
         created_at (float): Date created of the scroll. Defaults to time.time()
 
         content (str): Content

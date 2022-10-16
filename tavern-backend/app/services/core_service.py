@@ -1,5 +1,5 @@
 import time
-from typing import Dict, List
+from typing import List
 
 from app.config import SETTINGS
 from app.models.scroll_model import Scroll
@@ -101,7 +101,7 @@ class CoreService:
         """Update a scroll data
 
         Args:
-            id (str): HEX string
+            id (str): HEX string F
             scroll_model (Scroll): Scroll document
 
         Returns:
