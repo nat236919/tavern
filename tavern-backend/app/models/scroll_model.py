@@ -1,29 +1,20 @@
-import random
-import string
 from time import time
 from typing import Optional
 
 from pydantic import BaseModel, Field
+
+from app.services.helper_service import HelperService
 
 
 ################################################################################
 # Scroll Model
 # - Scroll
 ################################################################################
-def generate_hex_string():
-    """Generate Unique ID with 24 length
-
-    Returns:
-        str: ID
-    """
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=24))
-
-
 class Scroll(BaseModel):
     """Model for Scroll data
 
     Attrs:
-        _id (str): Unique id. Defaults to generate_hex_string().
+        _id (str): Unique id. Defaults to HelperService.generate_hex_string().
         created_at (float): Date created of the scroll. Defaults to time.time()
 
         content (str): Content
@@ -35,7 +26,7 @@ class Scroll(BaseModel):
         has_been_read (Optional[bool]): If this Scroll has already been read. Defaults to False.
     """
     # Auto-generated
-    _id: str = Field(default_factory=generate_hex_string)
+    _id: str = Field(default_factory=HelperService.generate_hex_string())
     created_at: float = Field(default_factory=time)
 
     # Required
