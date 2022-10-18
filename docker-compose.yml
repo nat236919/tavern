@@ -10,7 +10,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
+      - ./tavern-database/:/docker-entrypoint-initdb.d/:ro
 
   mongo-express:
     image: mongo-express
