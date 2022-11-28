@@ -2,8 +2,15 @@ import os
 import hashlib
 import random
 import string
+import secrets
+
+from fastapi import Depends
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from app.config import SETTINGS
+
+
+security = HTTPBasic()
 
 
 class HelperService:
@@ -29,3 +36,14 @@ class HelperService:
         encoded_secret = SETTINGS.APP_SECRET_KEY.encode()
         salt = os.urandom(32)
         return hashlib.pbkdf2_hmac('sha256', encoded_secret, salt, 10000).hex()
+
+    @staticmethod
+    def is_cred_valid(credentials: HTTPBasicCredentials = Depends(security)) -> str:
+        is_user_valid = secrets.compare_digest(
+            credentials.username, SETTINGS.APP_ROOT_USER
+        )
+        is_password_valid = secrets.compare_digest(
+            credentials.password, SETTINGS.APP_ROOT_PASSWORD
+        )
+
+        return is_user_valid and is_password_valid

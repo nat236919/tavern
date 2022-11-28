@@ -17,6 +17,8 @@ class Config(BaseSettings):
     APP_PORT: int = os.getenv('APP_PORT')
     APP_DEBUG: bool = os.getenv('APP_DEBUG')
     APP_SECRET_KEY: str = os.getenv('APP_SECRET_KEY')
+    APP_ROOT_USER: str = os.getenv('APP_ROOT_USER')
+    APP_ROOT_PASSWORD: str = os.getenv('APP_ROOT_PASSWORD')
 
     # Mongo
     MONGO_ROOT_USER: str = os.getenv('MONGO_ROOT_USER')
